@@ -1,0 +1,86 @@
+,Feature,dtype,Description
+0,Start,object,Start time for NBA game in Eastern Standard Time.
+1,Away,object,Visiting Team.
+2,A-Pts-F,int64,Total points scored by visiting team.
+3,Home,object,Home Team.
+4,H-Pts-F,int64,Total points scored by home team.
+5,OT?,object,"Indicates if the game went into overtime: if 0, no oevrtime period; if OT, one overtime period;, if 2OT, two overtime periods; etc..."
+6,Attend.,object,Fan attendance reported by home team.
+7,A-S-Min,float64,Minutes played by starters in 1st half for away team.
+8,A-FG,float64,Field Goals made in 1st half by away team.
+9,A-FGA,float64,Field Goals attempted in 1st half by away team.
+10,A-3P,float64,3-Point Shots made in 1st half by away team.
+11,A-3PA,float64,3-Point Shots attempted in 1st half by away team.
+12,A-FT,float64,Free throws made in 1st half by away team.
+13,A-FTA,float64,Free throws attempted in 1st half by away team.
+14,A-ORB,float64,Offensive rebounds collected in 1st half by away team.
+15,A-DRB,float64,Defensive rebounds collected in 1st half by away team.
+16,A-TRB,float64,Total rebounds collected in 1st half by away team.
+17,A-AST,float64,Assists recorded in 1st half by away team.
+18,A-STL,float64,Steals recorded in 1st half by away team.
+19,A-BLK,float64,Blocks recorded in 1st half by away team.
+20,A-TOV,float64,Turnovers surrendered in 1st half by away team.
+21,A-PF,float64,Personal fouls recorded in 1st half by away team.
+22,A-PTS,float64,Points scored in 1st half by away team.
+23,A-FG%,float64,Field goals made / field goals attempted in 1st half by away team.
+24,A-3P%,float64,3-point shots made / 3-point shots attempted in 1st half by away team.
+25,A-FT%,float64,Free throws made / Free throws attempted in 1st half by away team.
+26,A-AST/FG,float64,Percentage of Field Goals assisted in 1st half by away team.
+27,A-TOV/AST,float64,Turnover per assist in 1st half by away team.
+28,H-S-Min,float64,Minutes played by starters in 1st half for home team.
+29,H-FG,float64,Field Goals made in 1st half by home team.
+30,H-FGA,float64,Field Goals attempted in 1st half by home team.
+31,H-3P,float64,3-Point Shots made in 1st half by home team.
+32,H-3PA,float64,3-Point Shots attempted in 1st half by home team.
+33,H-FT,float64,Free throws made in 1st half by home team.
+34,H-FTA,float64,Free throws attempted in 1st half by home team.
+35,H-ORB,float64,Offensive rebounds collected in 1st half by home team.
+36,H-DRB,float64,Defensive rebounds collected in 1st half by home team.
+37,H-TRB,float64,Total rebounds collected in 1st half by home team.
+38,H-AST,float64,Assists recorded in 1st half by home team.
+39,H-STL,float64,Steals recorded in 1st half by home team.
+40,H-BLK,float64,Blocks recorded in 1st half by home team.
+41,H-TOV,float64,Turnovers surrendered in 1st half by home team.
+42,H-PF,float64,Personal fouls recorded in 1st half by home team.
+43,H-PTS,float64,Points scored in 1st half by home team.
+44,H-FG%,float64,Field goals made / field goals attempted in 1st half by home team.
+45,H-3P%,float64,3-point shots made / 3-point shots attempted in 1st half by home team.
+46,H-FT%,float64,Free throws made / Free throws attempted in 1st half by home team.
+47,H-AST/FG,float64,Percentage of Field Goals assisted in 1st half by home team.
+48,H-TOV/AST,float64,Turnover per assist in 1st half by home team.
+49,date,int64,date of game as int: YYYYMMDD. For data processing
+50,date_ts,object,date of game as string: YYYY-MM-DD. To be converted by datetime during data processing.
+51,away_b2b,int64,Identifier: 1 means away team on second night of back-to-back games.
+52,home_b2b,int64,Identifier: 1 means home team on second night of back-to-back games.
+53,season,int64,Identify which season the game belongs to: YYYY.
+54,S-Min H-A,float64,Minutes played by starters in 1st half (difference: Home - Away)
+55,FG H-A,float64,Field Goals made in 1st half (difference: Home - Away)
+56,FGA H-A,float64,Field Goals attempted in 1st half (difference: Home - Away)
+57,3P H-A,float64,3-Point Shots made in 1st half (difference: Home - Away)
+58,3PA H-A,float64,3-Point Shots attempted in 1st half (difference: Home - Away)
+59,FT H-A,float64,Free throws made in 1st half (difference: Home - Away)
+60,FTA H-A,float64,Free throws attempted in 1st half (difference: Home - Away)
+61,ORB H-A,float64,Offensive rebounds collected in 1st half (difference: Home - Away)
+62,DRB H-A,float64,Defensive rebounds collected in 1st half (difference: Home - Away)
+63,TRB H-A,float64,Total rebounds collected in 1st half (difference: Home - Away)
+64,AST H-A,float64,Assists recorded in 1st half (difference: Home - Away)
+65,STL H-A,float64,Steals recorded in 1st half (difference: Home - Away)
+66,BLK H-A,float64,Blocks recorded in 1st half (difference: Home - Away)
+67,TOV H-A,float64,Turnovers surrendered in 1st half (difference: Home - Away)
+68,PF H-A,float64,Personal fouls recorded in 1st half (difference: Home - Away)
+69,PTS H-A,float64,Points scored in 1st half (difference: Home - Away)
+70,FG% H-A,float64,Field goals made / field goals attempted in 1st half (difference: Home - Away)
+71,3P% H-A,float64,3-point shots made / 3-point shots attempted in 1st half (difference: Home - Away)
+72,FT% H-A,float64,Free throws made / Free throws attempted in 1st half (difference: Home - Away)
+73,AST/FG H-A,float64,Percentage of Field Goals assisted in 1st half (difference: Home - Away)
+74,TOV/AST H-A,float64,Turnover per assist in 1st half (difference: Home - Away)
+75,2-Half H-A,float64,Points scored in 2nd Half (difference: Home - Away)
+76,2-Half H>A,int64,Indicator: 1 means home team scored more points than away team im 2nd half.
+77,2-Half A-H,float64,Points scored in 2nd Half (difference: Away - Home)
+78,2-Half A>H,int64,Indicator: 1 means away team scored more points than home team im 2nd half.
+79,away_ML,float64,2nd-half moneyline betting odds for taking the away team to score more points in the 2nd-half including overtime.
+80,home_ML,float64,2nd-half moneyline betting odds for taking the home team to score more points in the 2nd-half including overtime.
+81,tp wins,float64,Profit from winning home 2nd-half moneyline bet (based on home_ML).
+82,tn wins,float64,Profit from winning away 2nd-half moneyline bet (based on away_ML).
+83,Home Spread,float64,Pre-game point spread in reference to home team (i.e. -4 means home team is favored by 4 points).
+84,Favored Ahead By,float64,The amount of points the team favored to win in pregame point spread is ahead by at halftime (i.e. 5 means the favorite to win is leading by 5 at halftime).
