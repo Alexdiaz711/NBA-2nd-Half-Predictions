@@ -243,6 +243,9 @@ df7 = df7[df7['PTS H-A'].abs() <= 40]
 df7 = df7[df7['BLK H-A'].abs() <= 12]
 df7 = df7[df7['AST H-A'].abs() <= 20]
 
+# Dropping columns no longer needed
+df7.drop(['Date', 'home', 'away', 'Box', 'link'], axis=1, inplace=True)
+
 # Storing Final DF
 df7.to_csv('data/data.csv')
 
