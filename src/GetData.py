@@ -77,8 +77,18 @@ for i in range(2001, 2021):
         r = requests.get(url)
         games_list.insert_one({'year': i, 'month': month, 'html': r.content})
         
+
+# Parsing data from MongoDB
+for i in range(2001, 2021):
+    if i == 2020:
+        months = months[:-3]
+    for month in months:        
         # parse table data into rows
-        page = r.content
+        query = {"$and":
+                [{"year": i},
+                {"month": month}]
+                }
+        page = games_list.find_one(query)['html']
         soup = BeautifulSoup(page)
         if i == 2001 and month == 'october':
             headers = [h.text for h in soup.find_all('th')]
@@ -115,9 +125,11 @@ for i, l in enumerate(df['Link']):
     url= 'https://www.basketball-reference.com' + l
     r = requests.get(url)
     box_scores.insert_one({'Link': l, 'html': r.content})
-    page = r.content
-    soup = BeautifulSoup(page)
     
+# Retrieving data from MongoDB to parse
+for i, l in enumerate(df['Link']):
+    page = box_scores.find_one({'Link': l})['html']
+    soup = BeautifulSoup(page)
     # parse box-score page into table rows
     H1_away = soup.find_all('table')[3]
     if df.loc[i, 'OT?']=='OT':
@@ -176,9 +188,12 @@ for i, day in enumerate(df['date'].unique()):
     url= 'https://www.sportsbookreview.com/betting-odds/nba-basketball/money-line/2nd-half/?date=' + day
     r = requests.get(url)
     betting_list.insert_one({'Date': day, 'html': r.content})
-    page = r.content
-    soup = BeautifulSoup(page, "html.parser")
+
     
+# Retrieving data from MongoDB for parsing
+for i, day in enumerate(df['date'].unique()):
+    page = betting_list.find_one({'Date': day})['html']
+    soup = BeautifulSoup(page, "html.parser")
     days = []
     link = []
     home = []
@@ -200,7 +215,10 @@ for i, l in enumerate(df_games['link']):
     url= 'https://www.sportsbookreview.com' + l
     r = requests.get(url)
     betting_odds.insert_one({'Link': l, 'html': r.content})
-    page = r.content
+
+# Retrieving data from MongoDB for parsing
+for i, l in enumerate(df_games['link']):
+    page = betting_odds.find_one({'Link': l})['html']
     soup = BeautifulSoup(page, "html.parser")
 
     half2 = soup.find_all('div', class_='_398eq')[2]
