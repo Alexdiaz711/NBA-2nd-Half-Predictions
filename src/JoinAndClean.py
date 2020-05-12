@@ -16,7 +16,8 @@ data = df1.join(df2, rsuffix='2')
 data.fillna(0, inplace=True)
 data['date'] = data['Link'].apply(lambda x: x[11:19])
 
-# Creating back-to-back-games features
+# Creating back-to-back-games and attendance features
+data['Attend.'] = data['Attend.'].apply(lambda x: int(x.replace(',', '')))
 data['date_ts'] = data['date'].apply(lambda x: 
                                      datetime.datetime(int(str(x)[:4]), 
                                                        int(str(x)[4:6]), 
