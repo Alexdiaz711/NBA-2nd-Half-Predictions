@@ -58,8 +58,6 @@ def scores(y_hat, y_test, p=False):
 
 # Defining a function to plot Receiver Operator Characteristic Curve
 def plot_roc(y_test, y_prob, ax, model_label):
-    '''
-    '''
     fpr, tpr, thresholds = roc_curve(y_test, y_prob)
     ax.plot(fpr, tpr, label=model_label)
     ax.set_xlabel('False Positive Rate')
@@ -259,29 +257,25 @@ print('Neural Network: Accuracy: {:0.3f}, Precision: {:0.3f}, ROC AUC: {:0.3f}'
       .format(np.mean(NN_acc), np.mean(NN_pre), np.mean(NN_auc)))
 
 # Plotting results
-fig, ax = plt.subplots(1,2, figsize=(16,6))
-N = 5
-acc_means = [np.mean(guess_acc), np.mean(LR_acc), np.mean(RF_acc), np.mean(GB_acc), np.mean(NN_acc)]
-pre_means = [np.mean(guess_pre), np.mean(LR_pre), np.mean(RF_pre), np.mean(GB_pre), np.mean(NN_pre)]
-acc_err = [np.std(guess_acc), np.std(LR_acc), np.std(RF_acc), np.std(GB_acc), np.std(NN_acc)]
-pre_err = [np.std(guess_pre), np.std(LR_pre), np.std(RF_pre), np.std(GB_pre), np.std(NN_pre)]
-ax[0].grid(alpha=0.5)
-ind = np.arange(N)    # the x locations for the groups
-width = 0.33         # the width of the bars
-ax[0].bar(ind-width/2, acc_means, width, bottom=0, yerr=acc_err, label='Accuracy')
-ax[0].bar(ind+width/2, pre_means, width, bottom=0, yerr=pre_err, label='Precision')
-ax[0].set_title('Avg and Std of 100 Train/Test Splits')
-ax[0].set_xticks(ind)
-ax[0].set_xticklabels(('Baseline', 'Logistic Regression', 'Random Forest',
-                       'Gradient Boosting', 'Neural Network'), rotation=30, ha='right')
-ax[0].legend()
-ax[0].set_ylim(0.4, 0.7)
+fig, ax = plt.subplots(1,2, figsize=(16,7))
+ax[0].grid(alpha=0.4)
+ind = np.arange(5)    # the x locations for the groups
+width = 0.5         # the width of the bars
+ax[0].boxplot(acc_df, sym='+')
+ax[0].set_title('Accuracy of 100 Train/Test Splits')
+ax[0].set_xticks(ind+1)
+ax[0].set_xticklabels(('Baseline', 'Logistic\nRegression', 'Random\nForest',
+                       'Gradient\nBoosting', 'Neural\nNetwork'))
+ax[0].set_ylabel('Accuracy')
+
+ax[0].set_ylim(0.475, 0.65)
+
 ax[1].grid(alpha=0.5)
 plot_roc(y_test, y_prob_guess, ax[1], "Baseline, Avg AUC={:0.3f}".format(np.mean(guess_auc)))
 plot_roc(y_test, y_prob_LR[:,1], ax[1], 'LR, Avg AUC={:0.3f}'.format(np.mean(LR_auc)))
 plot_roc(y_test, y_prob_RF[:,1], ax[1], 'RF, Avg AUC={:0.3f}'.format(np.mean(RF_auc)))
 plot_roc(y_test, y_prob_GB[:,1], ax[1], 'GB, Avg AUC={:0.3f}'.format(np.mean(GB_auc)))
 plot_roc(y_test, y_prob_NN[:,1], ax[1], 'NN, Avg AUC={:0.3f}'.format(np.mean(NN_auc)))
+plt.savefig('images/ModelSelection.png')
 plt.show()
-plt.savefig('images/ModelCompare.png')
 
