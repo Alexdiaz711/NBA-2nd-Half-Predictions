@@ -37,6 +37,31 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=999)
 # Defining a funtion to help score models
 def scores(y_hat, y_test, p=False, model_name=None):
     '''
+    Uses the provided target predictions and target values to generate model scores.
+
+    Parameters
+    ----------
+    y_hat : list or numpy array
+        Target predictions
+    y_test : list or numpy array
+        Actual target values.
+    p: Boolean, default=False
+        When true, function will print scores.
+    model_name, default=None
+        Name of model being scored used in the printout of scores.
+
+    Returns
+    -------
+    a : Float
+        Accuracy of model.
+    r : Float
+        recall of model.
+    pr: Float
+        Precision of Model.
+    np: Float
+        Rate of predictions being of the positive class.
+    auc_score: Float
+        Area under the Receiver Operator Characteristic Curve
     '''
     a = accuracy_score(y_test, y_hat)
     r = recall_score(y_test, y_hat)
@@ -56,6 +81,26 @@ def scores(y_hat, y_test, p=False, model_name=None):
 
 # Defining a function to plot Receiver Operator Characteristic Curve
 def plot_roc(y_test, y_prob, ax, model_label, color):
+    '''
+    Uses the provided target predictions and target values to plot the ROC curve.
+
+    Parameters
+    ----------
+    y_hat : list or numpy array
+        Target predictions
+    y_test : list or numpy array
+        Actual target values.
+    ax: AxesSubplot
+        MatPlotLib Axes Subplot to plot ROC Curve on.
+    model_label: string
+        Name of model being plotted used in the legend.
+    color: string
+        Color to be used in plot for the current model.
+
+    Returns
+    -------
+    None
+    '''
     fpr, tpr, thresholds = roc_curve(y_test, y_prob)
     ax.plot(fpr, tpr, label=model_label, color=color)
     ax.set_xlabel('False Positive Rate')
