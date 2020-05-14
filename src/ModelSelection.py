@@ -1,6 +1,5 @@
-# This script will use GridSerach with 10-Fold Cross Validation to build the best of each model type.
-# Next, the models are compared against each other using accuracy, precision, and ROC AUC on 100
-# different train/test splits.
+# This script will use GridSerach with 10-Fold Cross Validation on train data to build the best of each model type.
+# Next, the models are compared against each other using accuracy, precision, and ROC AUC on the test data.
 
 import pandas as pd
 import numpy as np
@@ -18,9 +17,6 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.pipeline import Pipeline
 
-import warnings
-warnings.filterwarnings('ignore')
-
 plt.style.use('default')
 font = {'weight': 'bold',
         'size':   14}
@@ -36,9 +32,10 @@ features = ['S-Min H-A', 'FG H-A', 'FGA H-A', '3P H-A', '3PA H-A', 'FT H-A',
            'Favored Ahead By', 'Home Spread']
 X = data[features].values
 y = data['2-Half H>A'].values
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=999)
 
 # Defining a funtion to help score models
-def scores(y_hat, y_test, p=False):
+def scores(y_hat, y_test, p=False, model_name=None):
     '''
     '''
     a = accuracy_score(y_test, y_hat)
@@ -49,17 +46,18 @@ def scores(y_hat, y_test, p=False):
     auc_score = auc(fpr, tpr)
     if p==True:
         print('''
+            For {}:
             Accuracy : {:2.3f}
             Recall : {:2.3f}
             Precision : {:2.3f}
             Rate of Predict Pos: {:2.3f}
-            ROC AUC: {:0.3f}'''.format(a, r, pr, np, auc_score))
+            ROC AUC: {:0.3f}'''.format(model_name, a, r, pr, np, auc_score))
     return a, r, pr, np, auc_score
 
 # Defining a function to plot Receiver Operator Characteristic Curve
-def plot_roc(y_test, y_prob, ax, model_label):
+def plot_roc(y_test, y_prob, ax, model_label, color):
     fpr, tpr, thresholds = roc_curve(y_test, y_prob)
-    ax.plot(fpr, tpr, label=model_label)
+    ax.plot(fpr, tpr, label=model_label, color=color)
     ax.set_xlabel('False Positive Rate')
     ax.set_ylabel('True Positive Rate')
     ax.set_title('Receiver Operator Characteristic Curve')
@@ -79,7 +77,7 @@ param_grid = {
 search = GridSearchCV(pipe, param_grid, n_jobs=-1, cv=10, 
                       scoring='accuracy', 
                       verbose=1)
-search.fit(X, y)
+search.fit(X_train, y_train)
 ind = search.best_index_
 mean = search.cv_results_['mean_test_score'][ind]
 std = search.cv_results_['std_test_score'][ind]
@@ -101,11 +99,11 @@ param_grid = {
 search = GridSearchCV(pipe, param_grid, n_jobs=-1, cv=10, 
                       scoring='accuracy', 
                       verbose=1)
-search.fit(X, y)
+search.fit(X_train, y_train)
 ind = search.best_index_
 mean = search.cv_results_['mean_test_score'][ind]
 std = search.cv_results_['std_test_score'][ind]
-RF_best = search.best_estimator_[1]
+RF_best = search.best_estimator_[0]
 print("Best RF CV accuracy mean: {:.3f}, std:{:.3f}".format(mean, std))
 print(RF_best)
 
@@ -126,7 +124,7 @@ param_grid = {
 search = GridSearchCV(pipe, param_grid, n_jobs=-1, cv=10, 
                       scoring='accuracy', 
                       verbose=1)
-search.fit(X, y)
+search.fit(X_train, y_train)
 ind = search.best_index_
 mean = search.cv_results_['mean_test_score'][ind]
 std = search.cv_results_['std_test_score'][ind]
@@ -153,7 +151,7 @@ estimators.append(('standardize', StandardScaler()))
 estimators.append(('mlp', KerasClassifier(build_fn=create_NN, epochs=20, batch_size=32, verbose=1)))
 pipeline_NN = Pipeline(estimators)
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(pipeline_NN, X, y, cv=kfold, n_jobs=-1)
+results = cross_val_score(pipeline_NN, X_train, y_train, cv=kfold, n_jobs=-1)
 print("Best NN CV accuracy mean: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
 
@@ -184,98 +182,60 @@ estimators.append(('standardize', StandardScaler()))
 estimators.append(('mlp', KerasClassifier(build_fn=create_NN, epochs=20, batch_size=32, verbose=1)))
 pipeline_NN = Pipeline(estimators)
 
-# Creating lists to store scores for each model for each train/test split
-guess_acc, guess_rec, guess_pre,  guess_rate_pos, guess_auc = [], [], [], [], []
-LR_acc, LR_rec, LR_pre, LR_rate_pos, LR_auc = [], [], [], [], []
-RF_acc, RF_rec, RF_pre, RF_rate_pos, RF_auc = [], [], [], [], []
-GB_acc, GB_rec, GB_pre, GB_rate_pos, GB_auc = [], [], [], [], []
-NN_acc, NN_rec, NN_pre, NN_rate_pos, NN_auc = [], [], [], [], []
 
-# Looping through 100 train/test splits and predicting targets with each model
-for _ in range(100):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-    # Baseline: Flip a coin
-    y_hat_guess = np.random.binomial(1, 0.5, size=len(y_test))
-    y_prob_guess = np.full(y_test.shape, 0.5)
-    acc_guess, rec_guess, prec_guess, num_pos_guess, auc_guess = scores(y_hat_guess, y_test, p=False)
-    guess_acc.append(acc_guess)
-    guess_rec.append(rec_guess)
-    guess_pre.append(prec_guess)
-    guess_rate_pos.append(num_pos_guess)
-    guess_auc.append(auc_guess)
-    # Logistic Regression
-    pipeline_LR.fit(X_train, y_train)
-    y_prob_LR = pipeline_LR.predict_proba(X_test)
-    y_hat_LR = pipeline_LR.predict(X_test)
-    acc_LR, rec_LR, prec_LR, num_pos_LR, auc_LR = scores(y_hat_LR, y_test, p=False)
-    LR_acc.append(acc_LR)
-    LR_rec.append(rec_LR)
-    LR_pre.append(prec_LR)
-    LR_rate_pos.append(num_pos_LR)
-    LR_auc.append(auc_LR)
-    # Random Forest
-    pipeline_RF.fit(X_train, y_train)
-    y_prob_RF = pipeline_RF.predict_proba(X_test)
-    y_hat_RF = pipeline_RF.predict(X_test)
-    acc_RF, rec_RF, prec_RF, num_pos_RF, auc_RF = scores(y_hat_RF, y_test, p=False)
-    RF_acc.append(acc_RF)
-    RF_rec.append(rec_RF)
-    RF_pre.append(prec_RF)
-    RF_rate_pos.append(num_pos_RF)
-    RF_auc.append(auc_RF)
-    # Gradient Boosting
-    pipeline_GB.fit(X_train, y_train)
-    y_prob_GB = pipeline_GB.predict_proba(X_test)
-    y_hat_GB = pipeline_GB.predict(X_test)
-    acc_GB, rec_GB, prec_GB, num_pos_GB, auc_GB = scores(y_hat_GB, y_test, p=False)
-    GB_acc.append(acc_GB)
-    GB_rec.append(rec_GB)
-    GB_pre.append(prec_GB)
-    GB_rate_pos.append(num_pos_GB)
-    GB_auc.append(auc_GB)
-    # Neural Network
-    pipeline_NN.fit(X_train, y_train)
-    y_prob_NN = pipeline_NN.predict_proba(X_test)
-    y_hat_NN = pipeline_NN.predict(X_test)
-    acc_NN, rec_NN, prec_NN, num_pos_NN, auc_NN = scores(y_hat_NN, y_test, p=False)
-    NN_acc.append(acc_NN)
-    NN_rec.append(rec_NN)
-    NN_pre.append(prec_NN)
-    NN_rate_pos.append(num_pos_NN)
-    NN_auc.append(auc_NN)
 
-# Printing results:
-print('Baseline: Accuracy: {:0.3f}, Precision: {:0.3f}, ROC AUC: {:0.3f}'
-      .format(np.mean(guess_acc), np.mean(guess_pre), np.mean(guess_auc)))
-print('Logistic Regression: Accuracy: {:0.3f}, Precision: {:0.3f}, ROC AUC: {:0.3f}'
-      .format(np.mean(LR_acc), np.mean(LR_pre), np.mean(LR_auc)))
-print('Random Forest: Accuracy: {:0.3f}, Precision: {:0.3f}, ROC AUC: {:0.3f}'
-      .format(np.mean(RF_acc), np.mean(RF_pre), np.mean(RF_auc)))
-print('Gradient Boosting: Accuracy: {:0.3f}, Precision: {:0.3f}, ROC AUC: {:0.3f}'
-      .format(np.mean(GB_acc), np.mean(GB_pre), np.mean(GB_auc)))
-print('Neural Network: Accuracy: {:0.3f}, Precision: {:0.3f}, ROC AUC: {:0.3f}'
-      .format(np.mean(NN_acc), np.mean(NN_pre), np.mean(NN_auc)))
+# Training Models for comparison and selection
+# Baseline: Flip a coin
+y_hat_guess = np.random.binomial(1, 0.5, size=len(y_test))
+y_prob_guess = np.full(y_test.shape, 0.5)
+acc_guess, rec_guess, prec_guess, num_pos_guess, auc_guess = scores(y_hat_guess, y_test, p=True, model_name='Baseline')
+
+# Logistic Regression
+pipeline_LR.fit(X_train, y_train)
+y_prob_LR = pipeline_LR.predict_proba(X_test)
+y_hat_LR = pipeline_LR.predict(X_test)
+acc_LR, rec_LR, prec_LR, num_pos_LR, auc_LR = scores(y_hat_LR, y_test, p=True, model_name='Logistic Regression')
+
+# Random Forest
+pipeline_RF.fit(X_train, y_train)
+y_prob_RF = pipeline_RF.predict_proba(X_test)
+y_hat_RF = pipeline_RF.predict(X_test)
+acc_RF, rec_RF, prec_RF, num_pos_RF, auc_RF = scores(y_hat_RF, y_test, p=True, model_name='Random Forest')
+
+# Gradient Boosting
+pipeline_GB.fit(X_train, y_train)
+y_prob_GB = pipeline_GB.predict_proba(X_test)
+y_hat_GB = pipeline_GB.predict(X_test)
+acc_GB, rec_GB, prec_GB, num_pos_GB, auc_GB = scores(y_hat_GB, y_test, p=True, model_name='Gradient Boosting')
+
+# Neural Network
+pipeline_NN.fit(X_train, y_train)
+y_prob_NN = pipeline_NN.predict_proba(X_test)
+y_hat_NN = pipeline_NN.predict(X_test)
+acc_NN, rec_NN, prec_NN, num_pos_NN, auc_NN = scores(y_hat_NN, y_test, p=True, model_name='Neural Network')
+
 
 # Plotting results
-fig, ax = plt.subplots(1,2, figsize=(16,7))
+accuracies = [acc_guess, acc_LR, acc_RF, acc_GB, acc_NN]
+fig, ax = plt.subplots(1,2, figsize=(17,7))
 ax[0].grid(alpha=0.4)
-ind = np.arange(5)    # the x locations for the groups
+ind = np.arange(1, 6)    # the x locations for the groups
 width = 0.5         # the width of the bars
-ax[0].boxplot(acc_df, sym='+')
-ax[0].set_title('Accuracy of 100 Train/Test Splits')
-ax[0].set_xticks(ind+1)
+ax[0].bar(ind, accuracies, color=['royalblue', 'orange', 'teal', 'firebrick', 'darkmagenta'])
+ax[0].axhline(acc_RF, color='teal', alpha=0.5, ls='--')
+ax[0].text(3, 0.618, s='{:0.3f}'.format(acc_RF), fontweight='normal', ha='center')
+ax[0].set_title('Test Accuracy By Model')
+ax[0].set_xticks(ind)
 ax[0].set_xticklabels(('Baseline', 'Logistic\nRegression', 'Random\nForest',
                        'Gradient\nBoosting', 'Neural\nNetwork'))
-ax[0].set_ylabel('Accuracy')
-
+ax[0].set_ylabel('Test Accuracy')
 ax[0].set_ylim(0.475, 0.65)
 
 ax[1].grid(alpha=0.5)
-plot_roc(y_test, y_prob_guess, ax[1], "Baseline, Avg AUC={:0.3f}".format(np.mean(guess_auc)))
-plot_roc(y_test, y_prob_LR[:,1], ax[1], 'LR, Avg AUC={:0.3f}'.format(np.mean(LR_auc)))
-plot_roc(y_test, y_prob_RF[:,1], ax[1], 'RF, Avg AUC={:0.3f}'.format(np.mean(RF_auc)))
-plot_roc(y_test, y_prob_GB[:,1], ax[1], 'GB, Avg AUC={:0.3f}'.format(np.mean(GB_auc)))
-plot_roc(y_test, y_prob_NN[:,1], ax[1], 'NN, Avg AUC={:0.3f}'.format(np.mean(NN_auc)))
+plot_roc(y_test, y_prob_guess, ax[1], "Baseline, AUC={:0.3f}".format(auc_guess), color='royalblue')
+plot_roc(y_test, y_prob_LR[:,1], ax[1], 'LR, AUC={:0.3f}'.format(auc_LR), color='orange')
+plot_roc(y_test, y_prob_RF[:,1], ax[1], 'RF, AUC={:0.3f}'.format(auc_RF), color='teal')
+plot_roc(y_test, y_prob_GB[:,1], ax[1], 'GB, AUC={:0.3f}'.format(auc_GB), color='firebrick')
+plot_roc(y_test, y_prob_NN[:,1], ax[1], 'NN, AUC={:0.3f}'.format(auc_NN), color='darkmagenta')
 plt.savefig('images/ModelSelection.png')
 plt.show()
-
