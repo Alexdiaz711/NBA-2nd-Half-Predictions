@@ -35,5 +35,7 @@ Odds that are negative, are typically reserved for the team that the sportbook f
 * "-150" is converted to "$66.67"
 * "+150" is converted to "$150.00"
 
+## Conclusions
+
 ## Disclaimer
 Sports betting, or gambling of any sort, should not be taken lightly. The models and strategies recommended here are simply for educational purposes. USE AT YOUR OWN RISK. If you, or someone you know, might have a gambling problem, please call the National Problem Gambling Helpline at 1-800-522-4700
