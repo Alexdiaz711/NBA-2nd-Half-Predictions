@@ -1,6 +1,6 @@
 # <div align="center">NBA 2nd-Half Predictions</div>
 #### <div align="center">by Alex Diaz-Clark</div>
-Developing a supervised machine learning algorith to predict which team will score more points in the second-half of NBA games, including cost-benefit analysis, and betting simulation.
+Developing a supervised machine learning algorithm to predict which team will score more points in the second-half of NBA games, including a cost-benefit analysis, and betting simulation.
 
 ## Background
 
@@ -14,6 +14,8 @@ The goals of this project are as follows:
 
 ## The Data
 
+Data for this project was collected from multiple sources:
+* In-game statistics from the first-half of NBA games from 
 
 ## Tuning Models
 
