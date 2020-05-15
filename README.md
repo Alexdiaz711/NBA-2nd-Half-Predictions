@@ -25,7 +25,7 @@ The first-half statistics for each team used as model features include: minutes 
 
 A few extra features were created from the first-half statistics: field goal percentage, 3-point percentage, free throw percentage,  assists per field goal, and turnovers per assist.
 
-For the fist half statistics, a linear combination of each statistic was created as a differential between the two teams. (home - away). For example, a value of -10 for 'TRB H-A' means the away team had 10 more total rebounds in the first half than the home team.
+For the fist half statistics, a linear combination of each statistic was created as a differential between the two teams. (home - away). For example, a value of -10 for 'TRB H-A' means the away team had 10 more total rebounds in the first half than the home team. This helped reduce the feature space while still preserving any signal from each statistic.
 
 In addition to the 21 features from first-half data, a 4 more features were created for the models: whether or not the away team playing for the second night in a row, whether or not the home team playing for the second night in a row, what was the pre-game point spread, and by how many points the pre-game favorite is leading at halftime.
 
@@ -42,6 +42,10 @@ Although first-half statistics for over 25,000 NBA games were collected, the pre
 <p align="center">
 <img src="images/features.png">
 </p>
+
+Outliers were removed from the data for the following features at the respective thresholds shown in the plot below:
+
+
 
 ## Tuning Models
 
