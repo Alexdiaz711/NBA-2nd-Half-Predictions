@@ -184,6 +184,15 @@ print(GB_best)
 # Defining a function to build Neural Network
 def create_NN():
     '''
+    Function to create a Neural Network based on previously configured parameters.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    ----------
+    None
     '''
     model = Sequential()
     model.add(Dense(10, input_dim=25, activation='sigmoid'))
