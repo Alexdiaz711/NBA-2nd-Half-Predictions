@@ -4,7 +4,7 @@ Developing a supervised machine learning algorith to predict which team will sco
 
 ## Background
 
-Sports betting was once a hobby for sports enthusiasts looking to make the games a little more exciting. But with the emergence of machine learning algorithms, predictive models are being built with the aim of predicting the results of sporting events in order to generate a small expected-profit for every bet. There are professional sports bettors all over the world that try to exploit small statistical advantages over ta large volume of bets in order to turn a profit.
+Sports betting was once a hobby for sports enthusiasts looking to make the games a little more exciting. But with the emergence of machine learning algorithms, predictive models are being built with the aim of predicting the results of sporting events in order to generate a small expected-profit for every bet. There are professional sports bettors all over the world that try to exploit small statistical advantages over a large volume of bets in order to turn a profit.
 
 The goals of this project are as follows:
 * Develop a machine learning model that was be used to predict which team will score more points in the second-half of National Basketball Association (NBA) games. 
