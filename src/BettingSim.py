@@ -37,7 +37,9 @@ def run_sim(class_threshold, betting_threshold):
         1-D numpy array containing and index of games 0 - N
     cum_profit : List of length N
         List containing the cumulative profit for the simulation over the two 
-        seasons 
+        seasons
+    num_2018 : Integer 
+        Number of games bet on in 2018 season.
     '''
     sim = predict_df.copy()
     sim['sim predict H>A'] = sim['sim predict proba H>A'].apply(lambda x: 1 if x > class_threshold else 0)
@@ -58,7 +60,8 @@ def run_sim(class_threshold, betting_threshold):
         total_profit += profit
         cum_profit.append(total_profit)
     games = np.arange(len(cum_profit))
-    return games, cum_profit
+    num_2018 = (result.season==2018).sum()
+    return games, cum_profit, num_2018
 
 
 # Importing data from CSV, declaring features and target
@@ -103,15 +106,17 @@ predict_df['sim predict proba H>A'] = predict_proba
 
 
 # Getting results of the simulation and plotting them
-games1, cum_profit1 = run_sim(0.242, 104)
-games2, cum_profit2 = run_sim(0.605, 87)
+games1, cum_profit1, num_2018_1 = run_sim(0.242, 104)
+games2, cum_profit2, num_2018_2 = run_sim(0.605, 87)
 fig, ax = plt.subplots(figsize=(10,5))
-ax.plot(games1, cum_profit1, color='royalblue', label='Home Team Always, Bet thresh. = 104')
-ax.plot(games2, cum_profit2, color='firebrick', label='Class thresh. = 0.605, Bet thresh. = 87')
+ax.axvline(games1[num_2018_1], color='royalblue', alpha=0.4, ls='--')
+ax.axvline(games2[num_2018_2], color='firebrick', alpha=0.4, ls='--')
+ax.plot(games1, cum_profit1, color='royalblue', label='Class thresh. = 0.242, Payout thresh. = 104')
+ax.plot(games2, cum_profit2, color='firebrick', label='Class thresh. = 0.605, Payout thresh. = 87')
 ax.set_xlabel('Games Bet On', labelpad=10)
 ax.set_ylabel('Total Profit ($)')
 ax.grid()
-ax.legend(loc='lower_right')
+ax.legend(loc='lower right')
 ax.set_title('Betting Simulation for Last 2 Seasons ($100 Bets)')
 plt.savefig('images/BettingSim.png')
 plt.show()
