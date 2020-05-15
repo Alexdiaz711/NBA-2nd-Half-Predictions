@@ -211,7 +211,7 @@ print("Best NN CV accuracy mean: %.2f%% (%.2f%%)" % (results.mean()*100, results
 
 
 # Comparing the best of each model using avg accuracy, precision, and ROC AUC for
-# 100 different train/test splits.
+# the test data.
 
 # Logistic Regressor Pipeline
 estimators_LR = []
