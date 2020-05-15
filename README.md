@@ -40,7 +40,7 @@ The data required extensive cleaning and processing to get tot this point. The s
 Although first-half statistics for over 25,000 NBA games were collected, the pre-game point spread was only found for approximately the last 16,500 games. The decision was made to only use the games with the pre-game point spread because if the features importance. When used as a single feature to predict which team scores more points in the second half, the pre-game point spread was the most powerful predictor, as shown below:
 
 <p align="center">
-<img src="images/features.png">
+<img src="images/">
 </p>
 
 ## Tuning Models
