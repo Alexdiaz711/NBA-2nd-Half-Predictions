@@ -26,9 +26,12 @@ The goals of this project are as follows:
 The bet that this model was built to exploit for a profit is the second-half moneyline bet. With this bet, a bettor can place a wager on either team to score more points than their opponent in the second-half, including overtime, with the actual winner of the game having no impact on the result of the bet. It is pretty stright-forward, if you pick team A, and team A scores more points after halftime, you win the bet. If team B scores more points after halftime, you lose the bet. If the teams score the same amount of points after halftime, the full bet is returned to the bettor.
 
 While deciding who wins the bet is pretty straight forward, the betting odds are not. The odds are listed in the following format:
+
 * "-150" means that to win $100 profit, the bettor must wager $150.
 * "+150" means that if the bettor wagers $100 to win $150 profit.
+
 Odds that are negative, are typically reserved for the team that the sportbook favors to score more points after halftime. Odds that are positive, indicate that the sportsbook believes that team will score less points than their opponent after halftime. This can be confusing, so for the sake of the reader, and to make calculations more stright-forward in the simulation, the odds have all been converted to a format which is strictly the potential profit from a $100 bet. For example:
+
 * "-150" is converted to "$66.67"
 * "+150" is converted to "$150.00"
 
