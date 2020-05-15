@@ -9,13 +9,35 @@ Sports betting was once a hobby for sports enthusiasts looking to make the games
 The goals of this project are as follows:
 * Develop a machine learning model that was be used to predict which team will score more points in the second-half of National Basketball Association (NBA) games. 
 * Use the model to predict the second-half result of games during the 2015, 2016, and 2017 NBA seasons. 
-* Use those predictions, along with the historical betting odds for the second-half moneyline bet, in a cost/benefit analysis to develop a betting strategy for using the model. 
+* Use those predictions, along with the historical betting odds for the second-half money-line bet, in a cost/benefit analysis to develop a betting strategy for using the model. 
 * Test the betting strategy on the 2018 and 2019 NBA seasons in a betting simulation.
 
 ## The Data
 
 Data for this project was collected from multiple sources:
-* In-game statistics from the first-half of NBA games from 
+* In-game statistics for the first-half of 2001-2020 NBA games are from www.basketball-reference.com
+* Betting Odds for the second-half moneyline bet of 2015-2020 NBA games are from www.sportsbookreview.com
+* Pre-game point spreads for 2007-2020 NBA games also from www.sportsbookreview.com
+
+A script was written to scrape the first-half statistics and the 2nd-half betting odds from their respective web pages, which can be found at '/src/GetData.py' in this repository. The pre-game point spreads were directly downloaded for the website in spreadsheet files. 
+
+The first-half statistics for each team used as model features include: minutes played by starters, field goals made, field goal attempts, 3-point shots made, 3-point shots attempted, free throws made, free throw attempts, offensive rebounds, defensive rebounds, total rebounds, assists, steals, blocks, turnovers, personal fouls, and points scored.
+
+A few extra features were created from the first-half statistics: field goal percentage, 3-point percentage, free throw percentage,  assists per field goal, and turnovers per assist.
+
+For the fist half statistics, a linear combination of each statistic was created as a differential between the two teams. (home - away). For example, a value of -10 for 'TRB H-A' means the away team had 10 more total rebounds in the first half than the home team.
+
+In addition to the 21 features from first-half data, a 4 more features were created for the models: whether or not the away team playing for the second night in a row, whether or not the home team playing for the second night in a row, what was the pre-game point spread, and by how many points the pre-game favorite is leading at halftime.
+
+The pre-game point spread is in terms of the home team. For example, a value of -4 for 'Home Spread' means that the sportsbooks believe the home team to be most likely to win the game, by a margin of 4 points. This feature contains a lot of information as it tells the model which team the general public believes to be the best team.
+
+The 'Favored Ahead By' feature is in terms of the pre-game favorite. For example, a value of +8 for 'Favored Ahead By' means that the team which was favoured to win before the game started, is ahead by 8 points at halftime.
+
+As you can see, a shorthand was used for each feature name in this project, but you can find the metadata file which has descriptions of each feature at '/data/data_metadata.csv' in this repository, 
+
+The data required extensive cleaning and processing to get tot this point. The script which executes all of the cleaning can be found at '/src/JoinAndClean.py' in this repository.
+
+Although first-half statistics for over 25,000 NBA games were collected, the pre-game point spread was only found for approximately the last 16,500 games.
 
 ## Tuning Models
 
