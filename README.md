@@ -44,6 +44,18 @@ Although first-half statistics for over 25,000 NBA games were collected, the pre
 </p>
 
 Outliers were removed from the data for the following features at the respective thresholds shown in the plot below:
+<p align="left">
+<img src="images/outlier_0.png">
+<img src="images/outlier_1.png">
+</p>
+<p align="left">
+<img src="images/outlier_2.png">
+<img src="images/outlier_3.png">
+</p>
+<p align="left">
+<img src="images/outlier_4.png">
+<img src="images/outlier_5.png">
+</p>
 
 
 
