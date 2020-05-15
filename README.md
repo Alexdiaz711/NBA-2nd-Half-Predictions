@@ -7,7 +7,7 @@ Developing a supervised machine learning algorithm to predict which team will sc
 Sports betting was once a hobby for sports enthusiasts looking to make the games a little more exciting. But with the emergence of machine learning algorithms, predictive models are being built with the aim of predicting the results of sporting events in order to generate a small expected-profit for every bet. There are professional sports bettors all over the world that try to exploit small statistical advantages over a large volume of bets in order to turn a profit.
 
 The goals of this project are as follows:
-* Develop a machine learning model that was be used to predict which team will score more points in the second-half of National Basketball Association (NBA) games. 
+* Develop a machine learning model used to predict which team will score more points in the second-half of National Basketball Association (NBA) games. 
 * Use the model to predict the second-half result of games during the 2015, 2016, and 2017 NBA seasons. 
 * Use those predictions, along with the historical betting odds for the second-half money-line bet, in a cost/benefit analysis to develop a betting strategy for using the model. 
 * Test the betting strategy on the 2018 and 2019 NBA seasons in a betting simulation.
@@ -37,7 +37,11 @@ As you can see, a shorthand was used for each feature name in this project, but 
 
 The data required extensive cleaning and processing to get tot this point. The script which executes all of the cleaning can be found at '/src/JoinAndClean.py' in this repository.
 
-Although first-half statistics for over 25,000 NBA games were collected, the pre-game point spread was only found for approximately the last 16,500 games.
+Although first-half statistics for over 25,000 NBA games were collected, the pre-game point spread was only found for approximately the last 16,500 games. The decision was made to only use the games with the pre-game point spread because if the features importance. When used as a single feature to predict which team scores more points in the second half, the pre-game point spread was the most powerful predictor, as shown below:
+
+<p align="center">
+<img src="images/features.png">
+</p>
 
 ## Tuning Models
 
