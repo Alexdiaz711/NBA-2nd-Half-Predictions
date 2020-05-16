@@ -86,27 +86,27 @@ The script which performs the model tuning and generates visualizations for the 
 
 Armed with my machine learning algorithm and historical betting odds for the last five seasons, I turn my attention to conducting a cost/benefit analysis with the goal of developing a betting strategy. The 2015, 2016, and 2017 seasons will be used to conduct the analysis and develop an optimum betting strategy, while the 2018 and 2019 seasons (up until the season was halted due to the COVID-19 pandemic) will be reserved for the betting simulation. It is important that the betting simulation is conducted on games which had no influence on the development of the betting strategy. That way we know if the betting strategy is generalizable, along with the model.
 
-The bet that this model was built to exploit for a profit is the second-half moneyline bet. With this bet, a bettor can place a wager on either team to score more points than their opponent in the second-half, including overtime, with the actual winner of the game having no impact on the result of the bet. It is pretty stright-forward, if you pick team A, and team A scores more points after halftime, you win the bet. If team B scores more points after halftime, you lose the bet. If the teams score the same amount of points after halftime, the full bet is returned to the bettor.
+The bet that this model was built to exploit for a profit is the second-half money-line bet. With this bet, a bettor can place a wager on either team to score more points than their opponent in the second-half, including overtime, with the actual winner of the game having no impact on the result of the bet. It is pretty straight-forward, if you pick team A, and team A scores more points after halftime, you win the bet. If team B scores more points after halftime, you lose the bet. If the teams score the same amount of points after halftime, the full bet is returned to the bettor.
 
 While deciding who wins the bet is pretty straight forward, the betting odds are not. The odds are listed in the following format:
 
 * "-150" means that to win $100 profit, the bettor must wager $150.
 * "+150" means that if the bettor wagers $100 to win $150 profit.
 
-Odds that are negative, are typically reserved for the team that the sportbook favors to score more points after halftime. Odds that are positive, indicate that the sportsbook believes that team will score less points than their opponent after halftime. This can be confusing, so for the sake of the reader, and to make calculations more stright-forward in the simulation, the odds have all been converted to a format which is strictly the potential profit from a $100 bet. For example:
+Odds that are negative, are typically reserved for the team that the sports-book favors to score more points after halftime. Odds that are positive, indicate that the sportsbook believes that team will score less points than their opponent after halftime. This can be confusing, so for the sake of the reader, and to make calculations more straight-forward in the simulation, the odds have all been converted to a format which is strictly the potential profit from a $100 bet. For example:
 
 * "-150" is converted to "$66.67"
 * "+150" is converted to "$150.00"
 
-For the cost/benefit analysis, I predicted each seasons' games by training the model on the data from every other season, then predicting the season in question. I placed a mock wager of $100 on the second-half money-line bet. I bet on the home team if the model predicted the target variable to be 1 (positive class), and bet on the away team if the model predicted a 0 (negative class). As a reminder, the target variable answers the question: Will the home team score more points in the second-half than the visiting team? I used the prediciton, results of the game, and the actual halftime betting odds for each game to generate the profit curve shown below. 
+For the cost/benefit analysis, I predicted each seasons' games by training the model on the data from every other season, then predicting the season in question. I placed a mock wager of $100 on the second-half money-line bet. I bet on the home team if the model predicted the target variable to be 1 (positive class), and bet on the away team if the model predicted a 0 (negative class). As a reminder, the target variable answers the question: Will the home team score more points in the second-half than the visiting team? I used the prediction, the results of the game, and the actual halftime betting odds for each game to generate the profit curve shown below. 
 
 The profit curve shows the expected profit for each $100 bet as a function of the positive classification threshold. The prediction model doesn't just return a 1 or a 0. It returns a probability that the target variable is a 1. By default, the probability is just rounded to 1 or 0 to determine the prediction. So any prediction probability above 0.5 will become a prediction of 1. The purpose of the profit curve is so you can adjust the positive classification threshold to be lower or higher than 0.5 and see how that effects your expected profit.
 
 <p align="center">
-<img src="images/InitialProfitCurve.png">
+<img src="images/InitialProfitCurve.png" width="700">
 </p>
 
-You can see that although losing money, the expected profit for each bet is maximized when the classification threshold is so low that you're essentially classifying everything as 1, and betting on the home team every game, even though the predictions are much more accurate when the classification threshold is closer to 0.5. The reason is clear when looking at the cost/benefit matrices for thse situations.
+You can see that although losing money, the expected profit for each bet is maximized when the classification threshold is so low that you're essentially classifying everything as 1, and betting on the home team every game, even though the predictions are much more accurate when the classification threshold is closer to 0.5. The reason is clear when looking at the cost/benefit matrices for these situations.
 
 The cost/benefit matrix lets you see the expected financial impact of the true-positive, false-positive, true-negative, and false-negative predictions. In this case, the cost/benefit matrix changes along with the positive classification threshold because as you change the threshold, the games that make up the four cost/benefit matrix categories change, and in turn so do the average payouts from their respective bets. Shown below are the cost/benefit matrices assuming a $100 bet on each prediction for the classification thresholds of 0.5 and 0:
 
@@ -123,15 +123,32 @@ Threshold: 0 | Predict Positive | Predict Negative
 **Negative** | -$92.43 | N/A
 
                                        
-You can see that with the positive classification threshold set to 0.5, on average I am losing more money on the bad bets than I am winning on the good ones. With the threshold set to 0 (predicting 1 everytime, hence betting on the home team every time), that difference is much smaller. However, there is still a defecit and the betting strategy is still not profitable. 
+You can see that with the positive classification threshold set to 0.5, on average I am losing more money on the bad bets than I am winning on the good ones. With the threshold set to 0 (predicting 1 every time, hence betting on the home team every time), that difference is much smaller. However, there is still a deficit and the betting strategy is still not profitable. 
 
 This profit curve is created when I am betting on every game. I can choose to only place a bet when the potential payout is above a certain threshold. Shown below, adding another dimension to the profit curve to represent the betting payout threshold, transforms it into a profit surface:
 
 <p align="center">
-<img src="images/3dExpProfit.png">
+<img src="images/3dExpProfit.png" width="700">
 </p>
 
+The forward edge of the profit surface is simply the profit curve we were previously examining, where the payout threshold is 0 and I'm willing to accept any bet. You can see that as I become more selective about which bets I'm willing to accept (increasing the payout threshold), the system becomes more profitable.
+
+The maximum for this profit surface is at a classification threshold of 0.45 and a payout threshold of $186. The expected profit from each bet at these thresholds is an eye-popping $193. However, at a payout threshold of $186, I am being way to selective and these betting opportunities are far and few between. At these thresholds, I am only placing 5 bets over the entire 3 seasons. This is not ideal. As with any system where you're trying to exploit a small statistical advantage for a profit, you want to spread your risk over as many trails as possible. We can transform the profit surface to display the total profit over the 3 seasons, as opposed to the expected profit per bet. This will take into account the number of bets placed for each set of thresholds and we can choose a more appropriate betting system. The total profit surface is shown below:
+
+<p align="center">
+<img src="images/3dTotalProfit.png" width="700">
+</p>
+
+The global maximum of the total profit surface is at a classification threshold of 0.2425 and a payout threshold of $104, with an expected profit per bet of $9.84 for 1,343 bets in these 3 seasons. This result is telling me that the most profitable system I can use is to forget the model and simply bet on the home team every time the payout is above $104. That's disappointing because I wont be using my algorithm to predict results. So, I will run the betting simulation on a betting system that uses the global maximum's thresholds, but I will also find a local maximum with a classification threshold above 0.35 and run the betting simulation on that system. That way, I can see the algorithm's predictions in action and see if they are profitable in the simulation. 
+
+The local maximum I will use is at a classification threshold of 0.605 and a payout threshold of $87. This system has an expected profit of $3.62 per bet for 1,244 bets in these 3 seasons. 
+
+The script which executes the cost/benefit analysis can be found at '/src/CostBenefit.py' in this repository.
+
 ## Betting Simulation
+
+I want to simulate betting in the most realistic way possible, so when making predictions for the 2018 and 2019 seasons, the machine learning model was trained on data from games only in the season previous to the season I am predicting. That way, my model has no future knowledge of NBA results at the time it is making it's predictions. It's as if my model was making the predictions on the day of the game. 
+
 
 
 ## Conclusions
