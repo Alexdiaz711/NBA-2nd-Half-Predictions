@@ -102,23 +102,34 @@ For the cost/benefit analysis, I predicted each seasons' games by training the m
 
 The profit curve shows the expected profit for each $100 bet as a function of the positive classification threshold. The prediction model doesn't just return a 1 or a 0. It returns a probability that the target variable is a 1. By default, the probability is just rounded to 1 or 0 to determine the prediction. So any prediction probability above 0.5 will become a prediction of 1. The purpose of the profit curve is so you can adjust the positive classification threshold to be lower or higher than 0.5 and see how that effects your expected profit.
 
-<p align="left">
+<p align="center">
 <img src="images/InitialProfitCurve.png">
 </p>
 
 You can see that although losing money, the expected profit for each bet is maximized when the classification threshold is so low that you're essentially classifying everything as 1, and betting on the home team every game, even though the predictions are much more accurate when the classification threshold is closer to 0.5. The reason is clear when looking at the cost/benefit matrices for thse situations.
 
-The cost/benefit matrix lets you see the expected financial impact of the true-positive, false-positive, true-negative, and false-negative predictions. In this case, the cost/benefit matrix changes along with the positive classification threshold because as you change the threshold, the games that make up the four cost/benefit matrix categories change, and in turn so do the average payouts from their respective bets. Shown below are the cost/benefit matrices assuming a $100 bet on each prediction for the classification thresholds of 0 and 0.5:
+The cost/benefit matrix lets you see the expected financial impact of the true-positive, false-positive, true-negative, and false-negative predictions. In this case, the cost/benefit matrix changes along with the positive classification threshold because as you change the threshold, the games that make up the four cost/benefit matrix categories change, and in turn so do the average payouts from their respective bets. Shown below are the cost/benefit matrices assuming a $100 bet on each prediction for the classification thresholds of 0.5 and 0:
 
-<p align="center">
-<img src="images/CBMatrix2.png" width="400>
-</p>
 
-<p align="center">
-<img src="images/CBMatrix1.png" width="400>
-</p>
+Threshold: 0.5 | Predict Positive | Predict Negative
+--- | :---: | :---:
+**Positive** | $44.76 | -$100
+**Negative** | -$90.69 | $58.30 
+
+                                   
+Threshold: 0 | Predict Positive | Predict Negative
+--- | :---: | :---:
+**Positive** | $81.79 | N/A
+**Negative** | -$92.43 | N/A
+
                                        
-You can see that with the positive classification threshold set to 0.5, on average I am losing more money on the bad bets than I am winning on the good ones. With the threshold set to 0 (predicting 1 everytime, hence betting on the home team every time), that difference is much smaller, however it is still a defecit, and the betting strategy is still not profitable. 
+You can see that with the positive classification threshold set to 0.5, on average I am losing more money on the bad bets than I am winning on the good ones. With the threshold set to 0 (predicting 1 everytime, hence betting on the home team every time), that difference is much smaller. However, there is still a defecit and the betting strategy is still not profitable. 
+
+This profit curve is created when I am betting on every game. I can choose to only place a bet when the potential payout is above a certain threshold. Shown below, adding another dimension to the profit curve to represent the betting payout threshold, transforms it into a profit surface:
+
+<p align="center">
+<img src="images/3dExpProfit.png">
+</p>
 
 ## Betting Simulation
 
