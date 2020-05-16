@@ -147,13 +147,43 @@ The script which executes the cost/benefit analysis can be found at '/src/CostBe
 
 ## Betting Simulation
 
-I want to simulate betting in the most realistic way possible, so when making predictions for the 2018 and 2019 seasons, the machine learning model was trained on data from games only in the season previous to the season I am predicting. That way, my model has no future knowledge of NBA results at the time it is making it's predictions. It's as if my model was making the predictions on the day of the game. 
+I want to simulate betting in the most realistic way possible, so when making predictions for the 2018 and 2019 seasons, the machine learning model was trained on data from games only in the seasons previous to the season I am predicting. That way, my model has no future knowledge of NBA results at the time it is making it's predictions. It's as if my model was making the predictions on the day of the game. 
 
+Predicting the result for each game, and placing a $100 bet on each prediction (1 = bet home team, 0 = bet away team), I plotted the cumulative profit after each bet placed for both betting strategies below:
 
+<p align="center">
+<img src="images/BettingSim.png" width="700">
+</p>
+
+The "bet the home team every time" strategy is in blue, while the system I chose to utilize the model's predictions is in red. The vertical dotted lines represent the end of the 2018 season. You can see that the "bet the home team every time" system had a great profit the first season, but actually lost money on the second season. While the system using the model's predictions profited about $1500 each of the two seasons. Below is a table summarizing the results:
+
+Classification and Payout Thresholds | Sim. Profit | Sim. Profit per Bet | Estimated Profit per Bet from Cost/Benefit Analysis
+--- | :---: | :---: | :---:
+(0.242, $104) | $2,858.00 | $3.57 | $9.84
+(0.605, $87) | $3,002.12 | $3.74 | $3.62
+
+So the "bet the home team every time" strategy was not as strong in these 2 seasons as it was in the previous 3 seasons. The system utilizing the model's predictions delivered as expected, and slightly outperformed the other model.
+
+The script which executes the betting simulation can be found at '/src/BettingSim.py' in this repository.
 
 ## Conclusions
 
+My big takeaways from this project are as follows:
+* Past results don't always dictate future results. Although both systems were profitable over the simulations seasons, the system which performed overwhelmingly better in the 3 seasons used to conduct the cost/benefit analysis did not perform better in the simulation.
+* There are applications where a model predicting with only 61% accuracy can be exploited for a profit. 
+* Finally, the cost/benefit of your predictions is often more important than the accuracy of your predictions. 
+
 ## Next Steps
+
+There are a few ideas I would like to explore to improve this project:
+* Weigh my bets in accordance with the prediction probabilities from my algorithm such that I am betting more money on the predictions which my model is more certain of. 
+* Continue tuning the Neural Network and try to develop a better predicting model.
+* Attempt to use other types of machine learning models, such as XGBoost. 
+* Adjust my betting amount with as my cumulative profit grows to see if compounding the winnings during the simulation has a significant effect on the outcome.
+
+## Acknowledgments
+
+I would like to thank www.basketball-reference.com and www.sportsbookreview.com for making this data publicly available and accessible. I would also like to thank the instructors and staff of Galvanize -- San Francisco's Data Science Immersive Program for their guidance in developing this project. 
 
 ## Disclaimer
 Sports betting, or gambling of any sort, should not be taken lightly. The models and strategies recommended here are simply for educational purposes. USE AT YOUR OWN RISK. If you, or someone you know, might have a gambling problem, please call the National Problem Gambling Helpline at 1-800-522-4700
