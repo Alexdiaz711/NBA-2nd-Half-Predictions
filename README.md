@@ -169,7 +169,7 @@ The script which executes the betting simulation can be found at '/src/BettingSi
 ## Conclusions
 
 My big takeaways from this project are as follows:
-* Past results don't always dictate future results. Although both systems were profitable over the simulations seasons, the system which performed overwhelmingly better in the 3 seasons used to conduct the cost/benefit analysis did not perform better in the simulation.
+* Past results don't always dictate future results. Although both systems were profitable over the simulated seasons, the system which performed overwhelmingly better in the 3 seasons used to conduct the cost/benefit analysis did not perform better in the simulation.
 * There are applications where a model predicting with only 61% accuracy can be exploited for a profit. 
 * Finally, the cost/benefit of your predictions is often more important than the accuracy of your predictions. 
 
