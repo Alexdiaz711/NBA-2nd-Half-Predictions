@@ -179,7 +179,7 @@ There are a few ideas I would like to explore to improve this project:
 * Weigh my bets in accordance with the prediction probabilities from my algorithm such that I am betting more money on the predictions which my model is more certain of. 
 * Continue tuning the Neural Network and try to develop a better predicting model.
 * Attempt to use other types of machine learning models, such as XGBoost. 
-* Adjust my betting amount with as my cumulative profit grows to see if compounding the winnings during the simulation has a significant effect on the outcome.
+* Adjust my betting amount as my cumulative profit grows to see if compounding the winnings during the simulation has a significant effect on the outcome.
 
 ## Acknowledgments
 
