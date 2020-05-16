@@ -16,7 +16,7 @@ The goals of this project are as follows:
 
 Data for this project was collected from multiple sources:
 * In-game statistics for the first-half of 2001-2020 NBA games are from www.basketball-reference.com
-* Betting Odds for the second-half moneyline bet of 2015-2020 NBA games are from www.sportsbookreview.com
+* Betting Odds for the second-half money-line bet of 2015-2020 NBA games are from www.sportsbookreview.com
 * Pre-game point spreads for 2007-2020 NBA games also from www.sportsbookreview.com
 
 A script was written to scrape the first-half statistics and the 2nd-half betting odds from their respective web pages, which can be found at '/src/GetData.py' in this repository. The pre-game point spreads were directly downloaded for the website in spreadsheet files. 
@@ -29,9 +29,9 @@ For the fist half statistics, a linear combination of each statistic was created
 
 In addition to the 21 features from first-half data, a 4 more features were created for the models: whether or not the away team playing for the second night in a row, whether or not the home team playing for the second night in a row, what was the pre-game point spread, and by how many points the pre-game favorite is leading at halftime.
 
-The pre-game point spread is in terms of the home team. For example, a value of -4 for 'Home Spread' means that the sportsbooks believe the home team to be most likely to win the game, by a margin of 4 points. This feature contains a lot of information as it tells the model which team the general public believes to be the best team.
+The pre-game point spread is in terms of the home team. For example, a value of -4 for 'Home Spread' means that the sports-books believe the home team to be most likely to win the game, by a margin of 4 points. This feature contains a lot of information as it tells the model which team the general public believes to be the best team.
 
-The 'Favored Ahead By' feature is in terms of the pre-game favorite. For example, a value of +8 for 'Favored Ahead By' means that the team which was favoured to win before the game started, is ahead by 8 points at halftime.
+The 'Favored Ahead By' feature is in terms of the pre-game favorite. For example, a value of +8 for 'Favored Ahead By' means that the team which was favored to win before the game started, is ahead by 8 points at halftime.
 
 As you can see, a shorthand was used for each feature name in this project, but you can find the metadata file which has descriptions of each feature at '/data/data_metadata.csv' in this repository, 
 
@@ -43,7 +43,7 @@ Although first-half statistics for over 25,000 NBA games were collected, the pre
 <img src="images/features.png">
 </p>
 
-Outliers were removed from the data for the following features at the respective thresholds shown in the plot below:
+Removing outliers only reduced the number of samples from 16,476 to 16,461. Outliers were removed from the data for the following features at the respective thresholds shown in the plot below:
 <p align="left">
 <img src="images/outlier_0.png">
 <img src="images/outlier_1.png">
@@ -58,10 +58,25 @@ Outliers were removed from the data for the following features at the respective
 </p>
 
 
+At this point, the data is almost ready for modeling. The final step is to define the target variable. The target variable for the model is whether or not the home team score more points after halftime than the away team (1 = yes, 0 = no). The variable is categorical and created by asking is '2-Half H-A' > 0. The target variable is 1 about 53% of the time, so there is no need for class rebalancing. 
 
 ## Tuning Models
 
+Tuning different machine learning models is a time-consuming processs and much effort is put into gaining incremental improvements in algorithm performance. With repect to this project, the following models were tuned: Logistic Regression, Random Forest Classifier, Gradient Boosting Classifier, and a forward-feeding Neural Network with one hidden layer. 
+
+For model-tuning, a train-test split was used. 25% of the data was set aside for later testing and choosing between the optimized version of each model. The remaining 75% of the data was used in Grid Search with 10-fold cross-validation to tune each model. 
+
+For this project, I want to make as many bets as possible to spread my risk over as many trials as possible, so am concerned with every prediction and not only those samples predicted to be in the positive class. Thus, I decided to score the models on accuracy as opposed to any other metric. 
+
 ## Model Selection
+
+The baseline model was simply a random sample of 1 or 0 with an equal chance of either case for each prediction. If we can't beat flipping a coin, there's no point in going any further. As explained at the end of the data section, predicting a 1 for every sample will be correct about 53% of the time, so the models should be better than 53% if they are doing anything right. 
+
+After tuning the hyperparameters for each model, the best performing on predicting the cross-validated train data for each model was compared to eachother using accuracy when predicting the unseen test data, and the area under the Receiver Operator Characteristic (ROC) curve. The results are shown in the figure below:
+<p align="left">
+<img src="images/ModelSelection.png">
+</p>
+As you can see, the baseline model had a test accuracy of about 51%. Unsuprisingly, all tuned models performed significantly better than the baseline and the Random Forest Classifier performed the best, with a test accuracy of 61.6% and an area under the ROC curve of 0.613. 
 
 ## Cost/Benefit Analysis
 
@@ -80,6 +95,8 @@ Odds that are negative, are typically reserved for the team that the sportbook f
 * "+150" is converted to "$150.00"
 
 ## Conclusions
+
+## Next Steps
 
 ## Disclaimer
 Sports betting, or gambling of any sort, should not be taken lightly. The models and strategies recommended here are simply for educational purposes. USE AT YOUR OWN RISK. If you, or someone you know, might have a gambling problem, please call the National Problem Gambling Helpline at 1-800-522-4700
