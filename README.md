@@ -111,9 +111,12 @@ You can see that although losing money, the expected profit for each bet is maxi
 The cost/benefit matrix lets you see the expected financial impact of the true-positive, false-positive, true-negative, and false-negative predictions. In this case, the cost/benefit matrix changes along with the positive classification threshold because as you change the threshold, the games that make up the four cost/benefit matrix categories change, and in turn so do the average payouts from their respective bets. Shown below are the cost/benefit matrices for the classification thresholds of 0 and 0.5:
 
 </p>
-<p align="left">
-<img src="images/CBMatrix1.png">
-<img src="images/CBMatrix2.png">
+<p align="center">
+<img src="images/CBMatrix1.png" width="400>
+</p>
+</p>
+<p align="center">
+<img src="images/CBMatrix2.png" width="400>
 </p>
 
 ## Betting Simulation
