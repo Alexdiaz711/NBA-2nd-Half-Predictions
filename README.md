@@ -62,7 +62,7 @@ At this point, the data is almost ready for modeling. The final step is to defin
 
 ## Tuning Models
 
-Tuning different machine learning models is a time-consuming processs and much effort is put into gaining incremental improvements in algorithm performance. With repect to this project, the following models were tuned: Logistic Regression, Random Forest Classifier, Gradient Boosting Classifier, and a forward-feeding Neural Network with one hidden layer. 
+Tuning different machine learning models is a time-consuming process and much effort is put into gaining incremental improvements in algorithm performance. With respect to this project, the following models were tuned: Logistic Regression, Random Forest Classifier, Gradient Boosting Classifier, and a forward-feeding Neural Network with one hidden layer. 
 
 For model-tuning, a train-test split was used. 25% of the data was set aside for later testing and choosing between the optimized version of each model. The remaining 75% of the data was used in Grid Search with 10-fold cross-validation to tune each model. 
 
@@ -72,11 +72,13 @@ For this project, I want to make as many bets as possible to spread my risk over
 
 The baseline model was simply a random sample of 1 or 0 with an equal chance of either case for each prediction. If we can't beat flipping a coin, there's no point in going any further. As explained at the end of the data section, predicting a 1 for every sample will be correct about 53% of the time, so the models should be better than 53% if they are doing anything right. 
 
-After tuning the hyperparameters for each model, the best performing on predicting the cross-validated train data for each model was compared to eachother using accuracy when predicting the unseen test data, and the area under the Receiver Operator Characteristic (ROC) curve. The results are shown in the figure below:
+After tuning the hyper-parameters for each model, the best performing on predicting the cross-validated train data for each model was compared to each other using accuracy when predicting the unseen test data, and the area under the Receiver Operator Characteristic (ROC) curve. The results are shown in the figure below:
 <p align="left">
 <img src="images/ModelSelection.png">
 </p>
-As you can see, the baseline model had a test accuracy of about 51%. Unsuprisingly, all tuned models performed significantly better than the baseline and the Random Forest Classifier performed the best, with a test accuracy of 61.6% and an area under the ROC curve of 0.613. 
+As you can see, the baseline model had a test accuracy of about 51%. Unsurprisingly, all tuned models performed significantly better than the baseline and the Random Forest Classifier performed the best, with a test accuracy of 61.6% and an area under the ROC curve of 0.613. So, going forward, I will be using the Random Forest Classifier for all predictions. 
+
+The script which performs the model tuning and model comparison can be found at '/src/ModelSelection.py' in this repository.
 
 ## Cost/Benefit Analysis
 
