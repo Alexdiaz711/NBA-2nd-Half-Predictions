@@ -19,23 +19,21 @@ Data for this project was collected from multiple sources:
 * Betting Odds for the second-half money-line bet of 2015-2020 NBA games are from www.sportsbookreview.com
 * Pre-game point spreads for 2007-2020 NBA games also from www.sportsbookreview.com
 
-A script was written to scrape the first-half statistics and the 2nd-half betting odds from their respective web pages, which can be found at '/src/GetData.py' in this repository. The pre-game point spreads were directly downloaded for the website in spreadsheet files. 
+A script was written to scrape the first-half statistics and the 2nd-half betting odds from their respective web pages, which can be found at '/src/GetData.py' in this repository. The pre-game point spreads were directly downloaded from the website in spreadsheet files. 
 
-The first-half statistics for each team used as model features include: minutes played by starters, field goals made, field goal attempts, 3-point shots made, 3-point shots attempted, free throws made, free throw attempts, offensive rebounds, defensive rebounds, total rebounds, assists, steals, blocks, turnovers, personal fouls, and points scored.
+The first-half statistics used as model features include: minutes played by starters, field goals made, field goal attempts, 3-point shots made, 3-point shots attempted, free throws made, free throw attempts, offensive rebounds, defensive rebounds, total rebounds, assists, steals, blocks, turnovers, personal fouls, and points scored.
 
 A few extra features were created from the first-half statistics: field goal percentage, 3-point percentage, free throw percentage,  assists per field goal, and turnovers per assist.
 
-For the fist half statistics, a linear combination of each statistic was created as a differential between the two teams. (home - away). For example, a value of -10 for 'TRB H-A' means the away team had 10 more total rebounds in the first half than the home team. This helped reduce the feature space while still preserving any signal from each statistic.
+For the first-half statistics, a linear combination of each statistic was created as a differential between the two teams (home - away). For example, a value of -10 for 'TRB H-A' means the away team had 10 more total rebounds in the first half than the home team. This helped reduce the feature space while still preserving any signal from each statistic.
 
-In addition to the 21 features from first-half data, a 4 more features were created for the models: whether or not the away team playing for the second night in a row, whether or not the home team playing for the second night in a row, what was the pre-game point spread, and by how many points the pre-game favorite is leading at halftime.
+In addition to the 21 features from first-half data, 4 more features were created for the models: whether or not the away team is playing for the second night in a row, whether or not the home team is playing for the second night in a row, what was the pre-game point spread, and by how many points the pre-game favorite is leading at halftime.
 
-The pre-game point spread is in terms of the home team. For example, a value of -4 for 'Home Spread' means that the sports-books believe the home team to be most likely to win the game, by a margin of 4 points. This feature contains a lot of information as it tells the model which team the general public believes to be the best team.
+The pre-game point spread is in terms of the home team. For example, a value of -4 for 'Home Spread' means that the sports-books believe the home team is most likely to win the game, by a margin of 4 points. This feature contains a lot of information as it tells the model which team the general public believes to be the best team.
 
 The 'Favored Ahead By' feature is in terms of the pre-game favorite. For example, a value of +8 for 'Favored Ahead By' means that the team which was favored to win before the game started, is ahead by 8 points at halftime.
 
 As you can see, a shorthand was used for each feature name in this project, but you can find the metadata file which has descriptions of each feature at '/data/data_metadata.csv' in this repository, 
-
-The data required extensive cleaning and processing to get tot this point. The script which executes all of the cleaning can be found at '/src/JoinAndClean.py' in this repository.
 
 Although first-half statistics for over 25,000 NBA games were collected, the pre-game point spread was only found for approximately the last 16,500 games. When used as a single feature in an un-tuned logistic regression to predict which team scores more points in the second half, the pre-game point spread was the most powerful predictor, as shown below. Hence, the decision was made to only use the games with the pre-game point spread because if the feature's importance.
 
@@ -43,7 +41,7 @@ Although first-half statistics for over 25,000 NBA games were collected, the pre
 <img src="images/features.png">
 </p>
 
-Removing outliers only reduced the number of samples from 16,476 to 16,461. Outliers were removed from the data for the following features at the respective thresholds shown in the plot below:
+Removing outliers only reduced the number of samples from 16,476 to 16,461. Outliers were removed from the data for the following features at the respective thresholds shown in the plots below:
 <p align="left">
 <img src="images/outlier_0.png">
 <img src="images/outlier_1.png">
@@ -58,7 +56,9 @@ Removing outliers only reduced the number of samples from 16,476 to 16,461. Outl
 </p>
 
 
-At this point, the data is almost ready for modeling. The final step is to define the target variable. The target variable for the model is whether or not the home team score more points after halftime than the away team (1 = yes, 0 = no). The variable is categorical and created by asking is '2-Half H-A' > 0. The target variable is 1 about 53% of the time, so there is no need for class rebalancing. 
+At this point, the data is almost ready for modeling. The final step is to define the target variable. The target variable for the model is whether or not the home team scored more points after halftime than the away team (1 = yes, 0 = no). The variable is categorical and created by asking is '2-Half H-A' > 0. The target variable is 1 about 53% of the time, so there is no need for class rebalancing. 
+
+The data required extensive cleaning and processing to get to this point. The script which executes all of the cleaning can be found at '/src/JoinAndClean.py' in this repository.
 
 ## Tuning Models
 
@@ -70,9 +70,11 @@ For this project, I want to make as many bets as possible to spread my risk over
 
 ## Model Selection
 
-The baseline model was simply a random sample of 1 or 0 with an equal chance of either case for each prediction. If we can't beat flipping a coin, there's no point in going any further. As explained at the end of the data section, predicting a 1 for every sample will be correct about 53% of the time, so the models should be better than 53% if they are doing anything right. 
+The baseline model was simply a random sample of 1 or 0 for each prediction, with an equal chance of either case. If we can't beat flipping a coin, there's no point in going any further. 
 
-After tuning the hyper-parameters for each model, the best performing on predicting the cross-validated train data for each model was compared to each other using accuracy when predicting the unseen test data, and the area under the Receiver Operator Characteristic (ROC) curve. The results are shown in the figure below:
+As explained at the end of the data section, predicting a 1 for every sample will be correct about 53% of the time, so the models should also be better than 53% if they are doing anything right. 
+
+After tuning the hyper-parameters for each model, the version with the highest prediciton accuracy on the train data was selected. Next each type of model's best performer was compared using accuracy when predicting the unseen test data, and the area under the Receiver Operator Characteristic (ROC) curve. The results are shown in the figure below:
 
 <p align="left">
 <img src="images/ModelSelection.png">
@@ -91,7 +93,7 @@ The bet that this model was built to exploit for a profit is the second-half mon
 While deciding who wins the bet is pretty straight forward, the betting odds are not. The odds are listed in the following format:
 
 * "-150" means that to win $100 profit, the bettor must wager $150.
-* "+150" means that if the bettor wagers $100 to win $150 profit.
+* "+150" means that the bettor must wager $100 to win $150 profit.
 
 Odds that are negative, are typically reserved for the team that the sports-book favors to score more points after halftime. Odds that are positive, indicate that the sportsbook believes that team will score less points than their opponent after halftime. This can be confusing, so for the sake of the reader, and to make calculations more straight-forward in the simulation, the odds have all been converted to a format which is strictly the potential profit from a $100 bet. For example:
 
@@ -125,7 +127,7 @@ Threshold: 0 | Predict Positive | Predict Negative
                                        
 You can see that with the positive classification threshold set to 0.5, on average I am losing more money on the bad bets than I am winning on the good ones. With the threshold set to 0 (predicting 1 every time, hence betting on the home team every time), that difference is much smaller. However, there is still a deficit and the betting strategy is still not profitable. 
 
-This profit curve is created when I am betting on every game. I can choose to only place a bet when the potential payout is above a certain threshold. Shown below, adding another dimension to the profit curve to represent the betting payout threshold, transforms it into a profit surface:
+The above profit curve is created when I am betting on every game. I can choose to only place a bet when the potential payout is above a certain threshold. Shown below, adding another dimension to the profit curve to represent the betting payout threshold, transforms it into a profit surface:
 
 <p align="center">
 <img src="images/3dExpProfit.png" width="700">
@@ -133,7 +135,7 @@ This profit curve is created when I am betting on every game. I can choose to on
 
 The forward edge of the profit surface is simply the profit curve we were previously examining, where the payout threshold is 0 and I'm willing to accept any bet. You can see that as I become more selective about which bets I'm willing to accept (increasing the payout threshold), the system becomes more profitable.
 
-The maximum for this profit surface is at a classification threshold of 0.45 and a payout threshold of $186. The expected profit from each bet at these thresholds is an eye-popping $193. However, at a payout threshold of $186, I am being way to selective and these betting opportunities are far and few between. At these thresholds, I am only placing 5 bets over the entire 3 seasons. This is not ideal. As with any system where you're trying to exploit a small statistical advantage for a profit, you want to spread your risk over as many trails as possible. We can transform the profit surface to display the total profit over the 3 seasons, as opposed to the expected profit per bet. This will take into account the number of bets placed for each set of thresholds and we can choose a more appropriate betting system. The total profit surface is shown below:
+The maximum for this profit surface is at a classification threshold of 0.45 and a payout threshold of $186. The expected profit from each bet at these thresholds is an eye-popping $193. However, at a payout threshold of $186, I am being way too selective and these betting opportunities are far and few between. At these thresholds, I am only placing 5 bets over the entire 3 seasons. This is not ideal. As with any system where you're trying to exploit a small statistical advantage for a profit, you want to spread your risk over as many trails as possible. We can transform the profit surface to display the total profit over the 3 seasons, as opposed to the expected profit per bet. This will take into account the number of bets placed for each set of thresholds and we can choose a more appropriate betting system. The total profit surface is shown below:
 
 <p align="center">
 <img src="images/3dTotalProfit.png" width="700">
@@ -147,7 +149,7 @@ The script which executes the cost/benefit analysis can be found at '/src/CostBe
 
 ## Betting Simulation
 
-I want to simulate betting in the most realistic way possible, so when making predictions for the 2018 and 2019 seasons, the machine learning model was trained on data from games only in the seasons previous to the season I am predicting. That way, my model has no future knowledge of NBA results at the time it is making it's predictions. It's as if my model was making the predictions on the day of the game. 
+I want to simulate betting in the most realistic way possible, so when making predictions for the 2018 and 2019 seasons, the machine learning model was trained on data from games only in the seasons previous to the season I am predicting. That way, my model has no future knowledge of NBA results at the time it's making predictions. It's as if my model was making the predictions on the day of the game. 
 
 Predicting the result for each game, and placing a $100 bet on each prediction (1 = bet home team, 0 = bet away team), I plotted the cumulative profit after each bet placed for both betting strategies below:
 
@@ -155,7 +157,7 @@ Predicting the result for each game, and placing a $100 bet on each prediction (
 <img src="images/BettingSim.png" width="700">
 </p>
 
-The "bet the home team every time" strategy is in blue, while the system I chose to utilize the model's predictions is in red. The vertical dotted lines represent the end of the 2018 season. You can see that the "bet the home team every time" system had a great profit the first season, but actually lost money on the second season. While the system using the model's predictions profited about $1500 each of the two seasons. Below is a table summarizing the results:
+The "bet the home team every time" strategy is in blue, while the system utilizing the model's predictions is in red. The vertical dotted lines represent the end of the 2018 season. You can see that the "bet the home team every time" system had a great profit the first season, but actually lost money on the second season. While the system using the model's predictions profited about $1500 each of the two seasons. Below is a table summarizing the results:
 
 Classification and Payout Thresholds | Sim. Profit | Sim. Profit per Bet | Estimated Profit per Bet from Cost/Benefit Analysis
 --- | :---: | :---: | :---:
