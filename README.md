@@ -37,7 +37,7 @@ As you can see, a shorthand was used for each feature name in this project, but 
 
 The data required extensive cleaning and processing to get tot this point. The script which executes all of the cleaning can be found at '/src/JoinAndClean.py' in this repository.
 
-Although first-half statistics for over 25,000 NBA games were collected, the pre-game point spread was only found for approximately the last 16,500 games. The decision was made to only use the games with the pre-game point spread because if the features importance. When used as a single feature to predict which team scores more points in the second half, the pre-game point spread was the most powerful predictor, as shown below:
+Although first-half statistics for over 25,000 NBA games were collected, the pre-game point spread was only found for approximately the last 16,500 games. When used as a single feature in an un-tuned logistic regression to predict which team scores more points in the second half, the pre-game point spread was the most powerful predictor, as shown below. Hence, the decision was made to only use the games with the pre-game point spread because if the feature's importance.
 
 <p align="center">
 <img src="images/features.png">
@@ -108,16 +108,17 @@ The profit curve shows the expected profit for each $100 bet as a function of th
 
 You can see that although losing money, the expected profit for each bet is maximized when the classification threshold is so low that you're essentially classifying everything as 1, and betting on the home team every game, even though the predictions are much more accurate when the classification threshold is closer to 0.5. The reason is clear when looking at the cost/benefit matrices for thse situations.
 
-The cost/benefit matrix lets you see the expected financial impact of the true-positive, false-positive, true-negative, and false-negative predictions. In this case, the cost/benefit matrix changes along with the positive classification threshold because as you change the threshold, the games that make up the four cost/benefit matrix categories change, and in turn so do the average payouts from their respective bets. Shown below are the cost/benefit matrices for the classification thresholds of 0 and 0.5:
+The cost/benefit matrix lets you see the expected financial impact of the true-positive, false-positive, true-negative, and false-negative predictions. In this case, the cost/benefit matrix changes along with the positive classification threshold because as you change the threshold, the games that make up the four cost/benefit matrix categories change, and in turn so do the average payouts from their respective bets. Shown below are the cost/benefit matrices assuming a $100 bet on each prediction for the classification thresholds of 0 and 0.5:
 
-</p>
-<p align="center">
-<img src="images/CBMatrix1.png" width="400>
-</p>
-</p>
 <p align="center">
 <img src="images/CBMatrix2.png" width="400>
 </p>
+
+<p align="center">
+<img src="images/CBMatrix1.png" width="400>
+</p>
+                                       
+You can see that with the positive classification threshold set to 0.5, on average I am losing more money on the bad bets than I am winning on the good ones. With the threshold set to 0 (predicting 1 everytime, hence betting on the home team every time), that difference is much smaller, however it is still a defecit, and the betting strategy is still not profitable. 
 
 ## Betting Simulation
 
